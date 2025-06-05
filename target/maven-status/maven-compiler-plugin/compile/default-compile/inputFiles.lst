@@ -1,3 +1,14 @@
-C:\Users\jvmor\Documents\NetBeansProjects\TulioA3\src\main\java\view\Historico.java
-C:\Users\jvmor\Documents\NetBeansProjects\TulioA3\src\main\java\view\Pendentes.java
+C:\Users\jvmor\Documents\NetBeansProjects\TulioA3\src\main\java\connectionfactory\conexaoDB.java
+C:\Users\jvmor\Documents\NetBeansProjects\TulioA3\src\main\java\model\bean\buscarDadosp.java
+C:\Users\jvmor\Documents\NetBeansProjects\TulioA3\src\main\java\model\bean\consultaMarcar.java
+C:\Users\jvmor\Documents\NetBeansProjects\TulioA3\src\main\java\model\bean\ConsultaResumoc.java
+C:\Users\jvmor\Documents\NetBeansProjects\TulioA3\src\main\java\model\bean\ConsultaResumom.java
+C:\Users\jvmor\Documents\NetBeansProjects\TulioA3\src\main\java\model\bean\medico.java
+C:\Users\jvmor\Documents\NetBeansProjects\TulioA3\src\main\java\model\bean\medicoLogin.java
+C:\Users\jvmor\Documents\NetBeansProjects\TulioA3\src\main\java\model\bean\paciente.java
+C:\Users\jvmor\Documents\NetBeansProjects\TulioA3\src\main\java\model\bean\pacienteLogin.java
+C:\Users\jvmor\Documents\NetBeansProjects\TulioA3\src\main\java\model\dao\consultaDAO.java
+C:\Users\jvmor\Documents\NetBeansProjects\TulioA3\src\main\java\model\dao\medicoDAO.java
+C:\Users\jvmor\Documents\NetBeansProjects\TulioA3\src\main\java\model\dao\pacienteDAO.java
+C:\Users\jvmor\Documents\NetBeansProjects\TulioA3\src\main\java\view\TelaMedico.java
 C:\Users\jvmor\Documents\NetBeansProjects\TulioA3\src\main\java\view\telaPrincipal.java
