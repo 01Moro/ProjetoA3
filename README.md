@@ -9,6 +9,11 @@ Tema do projeto:
 Um software que ajude a marcar consultas de forma rapida e simples.
 A ODS escolhida foi a 3 Saúde e bem-estar.
 
+O que pode ser melhorado:
+Design.
+
+Simplificar mais o codigo
+
 Observações:
 
 1 - Foi usado em algumas telas o JCalendar, caso não tenha e queira executar o projeto e preciso baixar e adicionar o jar por esse link: https://toedter.com/jcalendar/,
