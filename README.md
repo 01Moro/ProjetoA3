@@ -14,6 +14,8 @@ Design.
 
 Simplificar mais o codigo
 
+Colocar o banco de dados no repositório
+
 Observações:
 
 1 - Foi usado em algumas telas o JCalendar, caso não tenha e queira executar o projeto e preciso baixar e adicionar o jar por esse link: https://toedter.com/jcalendar/,
