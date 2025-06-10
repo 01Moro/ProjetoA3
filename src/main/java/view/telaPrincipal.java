@@ -40,11 +40,10 @@ import model.dao.pacienteDAO;
  */
 public class telaPrincipal extends javax.swing.JFrame {
     // Variavel para saber se tem uma conta logada
-    boolean logado;
+    private boolean logado;
+    private int idPacientelogado;
     public telaPrincipal() {
         initComponents();
-        carregarMedicos();
-        carregarConsultasNaTabela();
         // Oculta as abas do JTabbedPane
     jTabbedPane1.setUI(new javax.swing.plaf.basic.BasicTabbedPaneUI() {
             @Override
@@ -61,6 +60,7 @@ public class telaPrincipal extends javax.swing.JFrame {
                 SimpleDateFormat sdf = new SimpleDateFormat("d/M/yyyy");
                 lblDataConsulta.setText("Data: " + sdf.format(dataSelecionada));
                 jTabbedPane1.setSelectedIndex(5);
+                carregarMedicos();
             }
         });
         //JDatechooser do cadastro bloquear datas futuras
@@ -75,6 +75,8 @@ public class telaPrincipal extends javax.swing.JFrame {
     private void carregarMedicos(){
         medicoDAO medicoDAO = new medicoDAO();
         ArrayList<String> medicosAtivos = medicoDAO.listarMedicosAtivos();
+        
+         selecionarMedico.removeAllItems();
         
         for(String nome : medicosAtivos){
             selecionarMedico.addItem(nome);
@@ -96,7 +98,7 @@ public class telaPrincipal extends javax.swing.JFrame {
 
             // Consulta os dados no banco
             consultaDAO dao = new consultaDAO();
-            List<ConsultaResumoc> consultas = dao.listarConsultasPaciente();
+            List<ConsultaResumoc> consultas = dao.listarConsultasPaciente(idPacientelogado);
 
             // Preenche a tabela
             for (ConsultaResumoc c : consultas) {
@@ -133,6 +135,40 @@ public class telaPrincipal extends javax.swing.JFrame {
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Erro ao carregar dados do paciente.");
+        }
+    }
+    //Lista base de horarios possiveis
+    private List<String> gerarHorariosPossiveis() {
+        List<String> horarios = new ArrayList<>();
+        for (int hora = 9; hora <= 18; hora++) {
+            if (hora != 12 && hora != 13) {
+                horarios.add(String.format("%02d:00", hora));
+            }
+        }
+        return horarios;
+    }
+    private void atualizarHorasDisponiveis() {
+        String nomeSelecionado = (String) selecionarMedico.getSelectedItem();
+        if (nomeSelecionado == null || nomeSelecionado.equals("Selecione um médico")) return;
+
+        medicoDAO dao = new medicoDAO();
+        int idMedico = dao.buscarMediconome(nomeSelecionado);
+    
+        java.util.Date dataUtil = Calendario.getDate();
+        if (dataUtil == null) return;
+
+        Date dataSelecionada = new java.sql.Date(dataUtil.getTime());
+        List<String> horariosOcupados = dao.buscarHorariosOcupados(idMedico, dataSelecionada);
+
+        List<String> horariosPossiveis = gerarHorariosPossiveis();
+    
+        // Remover com segurança
+        List<String> horariosLivres = new ArrayList<>(horariosPossiveis);
+        horariosLivres.removeAll(horariosOcupados);
+
+        selecionarHora.removeAllItems();
+        for (String hora : horariosLivres) {
+            selecionarHora.addItem(hora);
         }
     }
     @SuppressWarnings("unchecked")
@@ -485,7 +521,11 @@ public class telaPrincipal extends javax.swing.JFrame {
 
         lblDataConsulta.setText("DATA");
 
-        selecionarHora.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "9:00", "10:00", "11:00", "14:00", "15:00", "16:00", "17:00", "18:00" }));
+        selecionarHora.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selecionarHoraActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("Selecione o médico e a hora:");
 
@@ -527,7 +567,7 @@ public class telaPrincipal extends javax.swing.JFrame {
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGap(101, 101, 101)
+                .addGap(256, 256, 256)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblDataConsulta)
                     .addComponent(jLabel5)
@@ -546,12 +586,12 @@ public class telaPrincipal extends javax.swing.JFrame {
                             .addComponent(lblNomepaciente)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 104, Short.MAX_VALUE)
                             .addComponent(jButton4))))
-                .addGap(0, 430, Short.MAX_VALUE))
+                .addContainerGap(275, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGap(73, 73, 73)
+                .addGap(92, 92, 92)
                 .addComponent(lblDataConsulta)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
@@ -571,7 +611,7 @@ public class telaPrincipal extends javax.swing.JFrame {
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton7)
                     .addComponent(btnMarcarconsulta))
-                .addContainerGap(156, Short.MAX_VALUE))
+                .addContainerGap(137, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("telaMarcarconsulta2", jPanel7);
@@ -655,6 +695,11 @@ public class telaPrincipal extends javax.swing.JFrame {
         jPanel10.setBorder(javax.swing.BorderFactory.createTitledBorder("Agendamentos"));
 
         btnAtualizar.setText("Atualizar");
+        btnAtualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAtualizarActionPerformed(evt);
+            }
+        });
 
         jButton10.setText("Voltar");
         jButton10.addActionListener(new java.awt.event.ActionListener() {
@@ -664,6 +709,11 @@ public class telaPrincipal extends javax.swing.JFrame {
         });
 
         btnCancelarconsulta.setText("Cancelar consulta");
+        btnCancelarconsulta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarconsultaActionPerformed(evt);
+            }
+        });
 
         tabelaConsultas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -685,14 +735,14 @@ public class telaPrincipal extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addComponent(jButton10)
-                .addGap(171, 171, 171)
+                .addGap(217, 217, 217)
                 .addComponent(btnCancelarconsulta)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 306, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnAtualizar)
                 .addGap(18, 18, 18))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 778, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel10Layout.setVerticalGroup(
@@ -809,6 +859,9 @@ public class telaPrincipal extends javax.swing.JFrame {
                     logado = true;
                     jTabbedPane1.setSelectedIndex(6);
                     carregarDadosDoPaciente(CPF_PACIENTE);
+                    idPacientelogado = dao.buscarIDPaciente(CPF_PACIENTE);
+                    System.out.println("ID do paciente logado: " + idPacientelogado);
+                    carregarConsultasNaTabela();
                 }
                 else{
                     JOptionPane.showMessageDialog(null, "CPF ou Senha Invalido.");
@@ -861,9 +914,12 @@ public class telaPrincipal extends javax.swing.JFrame {
         
             try{
                 pacienteLogin paciente = new pacienteLogin(CPF_PACIENTE, SENHA_PACIENTE);
-                pacienteDAO dao = new pacienteDAO();
-                if(dao.existe(paciente)){
-                    boolean sucesso = dao.excluir(paciente);
+                pacienteDAO daop = new pacienteDAO();
+                consultaDAO daoc = new consultaDAO();
+                int id = daop.buscarIDPaciente(CPF_PACIENTE);
+                daoc.excluir(id);
+                if(daop.existe(paciente)){
+                    boolean sucesso = daop.excluir(paciente);
                     if(sucesso){
                         JOptionPane.showMessageDialog(null, "Excluído com sucesso.");
                         jTabbedPane1.setSelectedIndex(0);
@@ -947,6 +1003,7 @@ public class telaPrincipal extends javax.swing.JFrame {
             daoc.consultaMarcar(dataSQL, horaSQL, horaFinal, idMedico, idPaciente);
             JOptionPane.showMessageDialog(null, "Consulta marcada!");
             jTabbedPane1.setSelectedIndex(7);
+            carregarConsultasNaTabela();
         }
         catch(Exception e){
             e.printStackTrace();
@@ -979,7 +1036,45 @@ public class telaPrincipal extends javax.swing.JFrame {
 
     private void selecionarMedicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selecionarMedicoActionPerformed
         // TODO add your handling code here:
+        atualizarHorasDisponiveis();
     }//GEN-LAST:event_selecionarMedicoActionPerformed
+
+    private void btnAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtualizarActionPerformed
+        // TODO add your handling code here:
+        carregarConsultasNaTabela();
+    }//GEN-LAST:event_btnAtualizarActionPerformed
+
+    private void btnCancelarconsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarconsultaActionPerformed
+        // TODO add your handling code here:
+        int linhaSelecionada = tabelaConsultas.getSelectedRow();
+        
+        if (linhaSelecionada == -1) {
+            JOptionPane.showMessageDialog(null, "Selecione uma coluna para cancelar");
+            return;
+        }
+        
+        int confirmacao = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja cancelar esta consulta?", "Confirmar", JOptionPane.YES_NO_OPTION);
+        if (confirmacao != JOptionPane.YES_OPTION){
+            return;
+        }
+        
+        int idConsulta = (int) tabelaConsultas.getValueAt(linhaSelecionada, 0);
+        
+        consultaDAO dao = new consultaDAO();
+        boolean sucesso = dao.cancelarConsulta(idConsulta);
+        
+        if(sucesso) {
+            JOptionPane.showMessageDialog(null, "Consulta cancelada!");
+            carregarConsultasNaTabela(); //atualiza a tabela
+        }
+        else {
+            JOptionPane.showMessageDialog(null, "Erro ao cancelar a consulta.");
+        }
+    }//GEN-LAST:event_btnCancelarconsultaActionPerformed
+
+    private void selecionarHoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selecionarHoraActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_selecionarHoraActionPerformed
 
     /**
      * @param args the command line arguments

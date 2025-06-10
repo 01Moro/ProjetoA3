@@ -80,16 +80,16 @@ public class pacienteDAO {
     //Usado para mostar os dados pessoais do cliente
     public buscarDadosp buscarPacienteporCPF(String cpf) {
         buscarDadosp dados = null;
-        Connection con = null;
-        PreparedStatement stmt = null;
+        Connection conn = null;
+        PreparedStatement ps = null;
         ResultSet rs = null;
 
         try {
-            con = conexaoDB.obtemConexao();
+            conn = conexaoDB.obtemConexao();
             String sql = "SELECT NOME_COMPLETO, CPF, DATA_DE_NASCIMENTO FROM paciente WHERE CPF = ?";
-            stmt = con.prepareStatement(sql);
-            stmt.setString(1, cpf);
-            rs = stmt.executeQuery();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, cpf);
+            rs = ps.executeQuery();
 
             if (rs.next()) {
                 dados = new buscarDadosp();
@@ -102,8 +102,8 @@ public class pacienteDAO {
         } finally {
             try {
                 if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
-                if (con != null) con.close();
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }

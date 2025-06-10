@@ -4,11 +4,14 @@
  */
 package view;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.table.DefaultTableModel;
 import model.bean.ConsultaResumom;
+import model.bean.buscarDadosm;
+import model.bean.medico;
 import model.bean.medicoLogin;
 import model.bean.pacienteLogin;
 import model.dao.consultaDAO;
@@ -24,6 +27,7 @@ public class TelaMedico extends javax.swing.JFrame {
     /**
      * Creates new form NewJFrame
      */
+    private int idMedicologado;
     public TelaMedico() {
         initComponents();
         
@@ -35,6 +39,7 @@ public class TelaMedico extends javax.swing.JFrame {
         }
         });
     }
+    //Coloca as consultas na tela do medico
     private void carregarConsultasDoMedico() {
         try {
             // Pega o CRM do médico logado
@@ -76,8 +81,27 @@ public class TelaMedico extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Erro ao carregar consultas do médico.");
         }
     }
+        //Coloca os dados do paciente no jLabel na tela da conta
+    private void carregarDadosDoMedico(String crm) {
+        try {
+            medicoDAO dao = new medicoDAO();
+            buscarDadosm medico = dao.buscarMedicoporCRM(crm);
 
-    
+            if (medico != null) {
+                lblNome.setText(medico.getNome());
+                lblCRM.setText(medico.getCrm());
+                lblCPF.setText(medico.getCpf());
+
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                lblDatanascimento.setText(sdf.format(medico.getDataNascimento()));
+            } else {
+                JOptionPane.showMessageDialog(this, "Medico não encontrado.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Erro ao carregar dados do paciente.");
+        }
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -95,11 +119,25 @@ public class TelaMedico extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         btnAtualizar = new javax.swing.JButton();
         btnVoltar = new javax.swing.JButton();
-        btnEditar = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabelaConsultas = new javax.swing.JTable();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        lblCRM = new javax.swing.JLabel();
+        lblCPF = new javax.swing.JLabel();
+        lblNome = new javax.swing.JLabel();
+        lblDatanascimento = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        btnSair = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel1.setText("CRM");
 
@@ -174,10 +212,25 @@ public class TelaMedico extends javax.swing.JFrame {
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Agendamentos"));
 
         btnAtualizar.setText("Atualizar");
+        btnAtualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAtualizarActionPerformed(evt);
+            }
+        });
 
         btnVoltar.setText("Voltar");
+        btnVoltar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVoltarActionPerformed(evt);
+            }
+        });
 
-        btnEditar.setText("Editar");
+        btnCancelar.setText("Cancelar consulta");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         tabelaConsultas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -199,12 +252,12 @@ public class TelaMedico extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnVoltar)
-                .addGap(275, 275, 275)
-                .addComponent(btnEditar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 283, Short.MAX_VALUE)
+                .addGap(244, 244, 244)
+                .addComponent(btnCancelar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnAtualizar)
                 .addContainerGap())
-            .addComponent(jScrollPane1)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 790, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -214,11 +267,84 @@ public class TelaMedico extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAtualizar)
                     .addComponent(btnVoltar)
-                    .addComponent(btnEditar))
+                    .addComponent(btnCancelar))
                 .addContainerGap())
         );
 
         jTabbedPane1.addTab("tab2", jPanel2);
+
+        jLabel5.setFont(new java.awt.Font("Arial Black", 0, 18)); // NOI18N
+        jLabel5.setText("Dados pessoais");
+
+        lblCRM.setText("CRM");
+
+        lblCPF.setText("CPF");
+
+        lblNome.setText("NOME");
+
+        lblDatanascimento.setText("DATA DE NASCIMENTO");
+
+        jLabel10.setFont(new java.awt.Font("Arial Black", 0, 24)); // NOI18N
+        jLabel10.setText("Conta");
+
+        jButton1.setText("Minha consultas");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        btnSair.setText("Sair da conta");
+        btnSair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSairActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(68, 68, 68)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton1)
+                            .addComponent(btnSair))
+                        .addGap(170, 170, 170)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblDatanascimento)
+                            .addComponent(lblNome)
+                            .addComponent(lblCPF)
+                            .addComponent(lblCRM)
+                            .addComponent(jLabel5)))
+                    .addComponent(jLabel10))
+                .addContainerGap(291, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addComponent(jLabel10)
+                .addGap(39, 39, 39)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jButton1))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNome)
+                    .addComponent(btnSair))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblCRM)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblCPF)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblDatanascimento)
+                .addContainerGap(172, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("tab3", jPanel3);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -251,8 +377,12 @@ public class TelaMedico extends javax.swing.JFrame {
                 medicoDAO dao = new medicoDAO();
                 if(dao.existe(medico)){
                     JOptionPane.showMessageDialog(null, "Bem vindo!");
-                    jTabbedPane1.setSelectedIndex(1);
+                    jTabbedPane1.setSelectedIndex(2);
                     carregarConsultasDoMedico();
+                    carregarDadosDoMedico(CRM);
+                    dao.atualizarStatusAtivoCRM(CRM, true);
+                    idMedicologado = dao.buscarMedico(CRM);
+                    System.out.println("ID do medico: " + idMedicologado);
                 }
                 else{
                     JOptionPane.showMessageDialog(null, "CPF ou Senha Invalido.");
@@ -271,6 +401,66 @@ public class TelaMedico extends javax.swing.JFrame {
     private void txtCPFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCPFActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCPFActionPerformed
+
+    private void btnAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtualizarActionPerformed
+        // TODO add your handling code here:
+        carregarConsultasDoMedico();
+    }//GEN-LAST:event_btnAtualizarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        // TODO add your handling code here:
+        int linhaSelecionada = tabelaConsultas.getSelectedRow();
+        
+        if (linhaSelecionada == -1) {
+            JOptionPane.showMessageDialog(null, "Selecione uma coluna para cancelar");
+            return;
+        }
+        
+        int confirmacao = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja cancelar esta consulta?", "Confirmar", JOptionPane.YES_NO_OPTION);
+        if (confirmacao != JOptionPane.YES_OPTION){
+            return;
+        }
+        
+        int idConsulta = (int) tabelaConsultas.getValueAt(linhaSelecionada, 0);
+        
+        consultaDAO dao = new consultaDAO();
+        boolean sucesso = dao.cancelarConsulta(idConsulta);
+        
+        if(sucesso) {
+            JOptionPane.showMessageDialog(null, "Consulta cancelada!");
+            carregarConsultasDoMedico(); //atualiza a tabela
+        }
+        else {
+            JOptionPane.showMessageDialog(null, "Erro ao cancelar a consulta.");
+        }
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here
+        jTabbedPane1.setSelectedIndex(1);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
+        // TODO add your handling code here:
+        jTabbedPane1.setSelectedIndex(2);
+    }//GEN-LAST:event_btnVoltarActionPerformed
+
+    private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
+        // TODO add your handling code here:
+        String CRM = txtCRM.getText();
+        
+        medicoDAO dao = new medicoDAO();
+        dao.atualizarStatusAtivoID(idMedicologado, false); // desativa o médico
+        JOptionPane.showMessageDialog(this, "Você saiu da conta.");
+
+        jTabbedPane1.setSelectedIndex(0);
+    }//GEN-LAST:event_btnSairActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        medicoDAO dao = new medicoDAO();
+        dao.atualizarStatusAtivoID(idMedicologado, false);
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -310,17 +500,26 @@ public class TelaMedico extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAtualizar;
-    private javax.swing.JButton btnEditar;
+    private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnEntrar;
+    private javax.swing.JButton btnSair;
     private javax.swing.JButton btnVoltar;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel lblCPF;
+    private javax.swing.JLabel lblCRM;
+    private javax.swing.JLabel lblDatanascimento;
+    private javax.swing.JLabel lblNome;
     private javax.swing.JTable tabelaConsultas;
     private javax.swing.JTextField txtCPF;
     private javax.swing.JTextField txtCRM;

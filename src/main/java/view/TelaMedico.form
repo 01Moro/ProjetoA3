@@ -8,6 +8,9 @@
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
     <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
+  <Events>
+    <EventHandler event="windowClosing" listener="java.awt.event.WindowListener" parameters="java.awt.event.WindowEvent" handler="formWindowClosing"/>
+  </Events>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
@@ -159,13 +162,13 @@
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btnVoltar" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="275" max="-2" attributes="0"/>
-                      <Component id="btnEditar" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="283" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="244" max="-2" attributes="0"/>
+                      <Component id="btnCancelar" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="btnAtualizar" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" alignment="0" pref="790" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -176,7 +179,7 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="btnAtualizar" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnVoltar" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnEditar" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnCancelar" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -188,16 +191,25 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Atualizar"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAtualizarActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnVoltar">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Voltar"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnVoltarActionPerformed"/>
+              </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="btnEditar">
+            <Component class="javax.swing.JButton" name="btnCancelar">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Editar"/>
+                <Property name="text" type="java.lang.String" value="Cancelar consulta"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCancelarActionPerformed"/>
+              </Events>
             </Component>
             <Container class="javax.swing.JScrollPane" name="jScrollPane1">
               <AuxValues>
@@ -219,6 +231,122 @@
                 </Component>
               </SubComponents>
             </Container>
+          </SubComponents>
+        </Container>
+        <Container class="javax.swing.JPanel" name="jPanel3">
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+              <JTabbedPaneConstraints tabName="tab3">
+                <Property name="tabTitle" type="java.lang.String" value="tab3"/>
+              </JTabbedPaneConstraints>
+            </Constraint>
+          </Constraints>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="-2" pref="68" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnSair" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="170" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="lblDatanascimento" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblNome" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblCPF" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblCRM" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace pref="291" max="32767" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+                      <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lblNome" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnSair" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="lblCRM" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="lblCPF" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="lblDatanascimento" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="172" max="32767" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+          <SubComponents>
+            <Component class="javax.swing.JLabel" name="jLabel5">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Arial Black" size="18" style="0"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Dados pessoais"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblCRM">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="CRM"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblCPF">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="CPF"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblNome">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="NOME"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblDatanascimento">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="DATA DE NASCIMENTO"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel10">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Arial Black" size="24" style="0"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Conta"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="jButton1">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Minha consultas"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="btnSair">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Sair da conta"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSairActionPerformed"/>
+              </Events>
+            </Component>
           </SubComponents>
         </Container>
       </SubComponents>

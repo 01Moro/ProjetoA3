@@ -36,13 +36,18 @@ public class consultaDAO {
         }
     }
     //Usado para colocar a consulta na tabela na tela do paciente
-    public List<ConsultaResumoc> listarConsultasPaciente(){
+    public List<ConsultaResumoc> listarConsultasPaciente(int ID_PACIENTE){
         List<ConsultaResumoc> lista = new ArrayList<>();
         
         String sql = "SELECT c.ID_CONSULTA, c.DATA_DA_CONSULTA, c.HORA_DA_CONSULTA, m.NOME_COMPLETO, m.CRM " +
-                     "FROM consulta_medica c JOIN medico m on c.ID_MEDICO = m.ID_MEDICO";
+                    "FROM consulta_medica c JOIN medico m ON c.ID_MEDICO = m.ID_MEDICO " +
+                    "WHERE c.ID_PACIENTE = ?";
         
-        try(Connection conn = conexaoDB.obtemConexao(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()){
+        try(Connection conn = conexaoDB.obtemConexao(); PreparedStatement ps = conn.prepareStatement(sql)){
+            
+            ps.setInt(1, ID_PACIENTE);
+            ResultSet rs = ps.executeQuery();
+            
             while (rs.next()) {
                 int ID_CONSULTA = rs.getInt("ID_CONSULTA");
                 Date DATA_DA_CONSULTA = rs.getDate("DATA_DA_CONSULTA");
@@ -89,4 +94,31 @@ public class consultaDAO {
 
         return lista;
     }
+    //Usado para excluir consultas antes de excluir a conta
+    public int excluir(int ID_PACIENTE) throws Exception{
+        String sql = "DELETE FROM consulta_medica WHERE ID_PACIENTE = ?";
+        
+        try (Connection conn = conexaoDB.obtemConexao(); PreparedStatement psConsultas = conn.prepareStatement(sql)) {
+        psConsultas.setInt(1, ID_PACIENTE); // Supondo que você tem esse método
+        int linhasafetadas = psConsultas.executeUpdate();
+        
+        return linhasafetadas;
+    }
+    }
+    public boolean cancelarConsulta(int idConsulta) {
+        String sql = "DELETE FROM consulta_medica WHERE ID_CONSULTA = ?";
+    
+        try (Connection conn = conexaoDB.obtemConexao();
+            PreparedStatement ps = conn.prepareStatement(sql)) {
+        
+            ps.setInt(1, idConsulta);
+            int linhasAfetadas = ps.executeUpdate();
+            return linhasAfetadas > 0;
+        } 
+        catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }
